@@ -1,32 +1,34 @@
 //registrando a service worker
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', async () => {
-        try {
-            let reg;
-            reg = await navigator.serviceWorker.register('/sw.js', { type: "module" });
+  window.addEventListener('load', async () => {
+    try {
+      let reg;
+      reg = await navigator.serviceWorker.register('/sw.js', { type: "module" });
 
-            console.log('Service worker registrada! 😎', reg);
-            postNews();
-        } catch (err) {
-            console.log('😥 Service worker registro falhou: ', err);
-        }
-    });
+      console.log('Service worker registrada! 😎', reg);
+      postNews();
+    } catch (err) {
+      console.log('😥 Service worker registro falhou: ', err);
+    }
+  });
 }
-
-let param = 'AI'
 const apiKey = '4abf7d67ddef4ae3817c6f0f72c44afa';
-let url = `https://newsapi.org/v2/everything?q=${param}&apiKey=${apiKey}`;
 const main = document.querySelector('main');
+const button = document.getElementById('btn')
 
 async function postNews() {
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log(url)
-    main.innerHTML = data.articles.map(createArticle).join('\n');
+  const param = await document.getElementById('search').value
+  const url = await `https://newsapi.org/v2/everything?q=${param}&apiKey=${apiKey}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(url)
+  main.innerHTML = data.articles.map(createArticle).join('\n');
 }
 
+button.addEventListener('click', () => postNews())
+
 function createArticle(article) {
-    return `
+  return `
            <div class="article">
                 <a href="${article.url}" target="_blank">
                     <img src="${article.urlToImage}" 
